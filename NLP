@@ -1,0 +1,86 @@
+🛠️ Project Steps & Instructions
+#📥 Download the Dataset
+import pandas as pd
+df = pd.read_csv('data.csv.1')
+df.head()
+
+Step 1: Load the Dataset
+# your code here
+
+import pandas as pd
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
+
+nltk.download('punkt')
+nltk.download('stopwords')
+
+
+# Define the preprocessing function
+def preprocess_text(text):
+    text = text.lower()
+    tokens = word_tokenize(text)
+    stop_words = set(stopwords.words('english'))
+    tokens = [word for word in tokens if word.isalnum() and word not in stop_words]
+
+    # Join the tokens back into a single string
+    preprocessed_text = ' '.join(tokens)
+
+    return preprocessed_text
+
+
+df = pd.read_csv('data.csv')
+
+# Apply preprocessing to the job descriptions
+df['cleaned_description'] = df['Job Description'].apply(preprocess_text)
+
+df[['Job Description', 'cleaned_description']].head()
+
+Step 3: Extract Skills Using Named Entity Recognition (NER)
+!pip install spacy
+!python -m spacy download en_core_web_sm
+
+import spacy
+
+nlp = spacy.load('en_core_web_sm')
+
+def extract_skills(text):
+    doc = nlp(text)
+    relevant_labels = ['technical skills', 'tools', 'expertise']
+
+    # Extract entities with relevant labels
+    skills = [ent.text for ent in doc.ents if ent.label_ in relevant_labels]
+
+    return skills
+
+
+df['extracted_skills'] = df['cleaned_description'].apply(extract_skills)
+
+df[['cleaned_description', 'extracted_skills']].head()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
